@@ -327,3 +327,20 @@ from customer_churn cc
 left join customer_returns cr on cc.CustomerID = cr.CustomerID
 group by cc.PreferredOrderCat
 order by Return_Rate_Percentage desc;
+
+-- creating a new view to import this data into power bi to make a dashboard.
+create or replace view ChurnAnalysis as
+select 
+    CustomerID,
+    Tenure,
+    CityTier,
+    PreferredOrderCat,
+    SatisfactionScore,
+    MaritalStatus,
+    CashbackAmount,
+    ComplaintReceived,
+    ChurnStatus,
+    distance_category,
+    HoursSpentOnApp,
+    OrderCount
+from customer_churn;
