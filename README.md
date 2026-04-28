@@ -21,7 +21,7 @@ customer relationships and ensuring business viability in a competitive landscap
 
 ## Dataset Description
 
-Table 1 - Customer_Churn
+Table 1 - customer_churn
 This dataset contains detailed customer-level information, including:
 ColumnName	-	DataType
 CustomerID	-	INT
@@ -31,7 +31,7 @@ PreferredLoginDevice	-	VARCHAR(20)
 CityTier	-	INT
 WarehouseToHome	-	INT
 PreferredPaymentMode	-	VARCHAR(20)
-Gender	-	ENUM('Male''Female')
+Gender	-	ENUM('Male','Female')
 HourSpendOnApp	-	INT
 NumberOfDeviceRegistered	-	INT
 PreferedOrderCat	-	VARCHAR(20)
@@ -45,7 +45,7 @@ OrderCount	-	INT
 DaySinceLastOrder	-	INT
 CashbackAmount	-	INT
 
-Table 2 - Customer_Returns
+Table 2 - customer_returns
 Column Name	-	DataType
 ReturnID	-	INT
 CustomerID	-	INT
@@ -64,15 +64,14 @@ Inserted structured dataset
 
 Performed multiple cleaning operations, including:
 
-Handling NULL values in:
-Tenure
-HourSpendOnApp
-WarehouseToHome
+Handling NULL values in the following columns:
+Tenure, HourSpendOnApp, WarehouseToHome, OrderAmountHikeFromlastYear, DaySinceLastOrder
 
 Standardising categorical values:
-Payment modes (e.g., COD, Cash on Delivery, CC)
+Payment modes (CC as Credit Card)
 Device types (Phone vs Mobile Phone)
 Checking inconsistencies and duplicates
+Outlier removal
 Preparing cleansed dataset for analysis
 
 ### 3️. Data Analysis
@@ -121,9 +120,9 @@ group by Gender order by Coupon_Count desc limit 1;
 ### -- 6. Identify which product categories are the most "unstable" by calculating the return rate per category.
 select 
     cc.PreferredOrderCat,
-    COUNT(cc.CustomerID) as Total_Customers,
-    COUNT(cr.ReturnID) as Total_Returns,
-    ROUND(COUNT(cr.ReturnID) / COUNT(cc.CustomerID) * 100, 2) as Return_Rate_Percentage
+    count(cc.CustomerID) as Total_Customers,
+    count(cr.ReturnID) as Total_Returns,
+    round(count(cr.ReturnID) / count(cc.CustomerID) * 100, 2) as Return_Rate_Percentage
 from customer_churn cc
 left join customer_returns cr on cc.CustomerID = cr.CustomerID
 group by cc.PreferredOrderCat
@@ -135,7 +134,7 @@ order by Return_Rate_Percentage desc;
 2. Fashion has Highest Returns: Among customers who returned fashion has returnded by more customers.
 3. Geographic Churn rate: City tier 1 more customers churned
 4. Complaints Drive Churn: Around 508 churned customers already given the complaint, which is 54%.
-5. Average Tenure : The average tenure of the customers churned is 3 years
+5. Average Tenure : The average tenure of the customers churned is 3 months
 
 ## Conclusion
 
