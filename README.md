@@ -54,12 +54,13 @@ RefundAmount	-	INT
 
 ## Project Steps
 
-1️. Database Setup
+### 1️. Database Setup
+
 Created database ecomm
 Created customer_churn table with appropriate data types
 Inserted structured dataset
 
-2️. Data Cleaning
+### 2️. Data Cleaning
 
 Performed multiple cleaning operations, including:
 
@@ -74,7 +75,7 @@ Device types (Phone vs Mobile Phone)
 Checking inconsistencies and duplicates
 Preparing cleansed dataset for analysis
 
-3️. Data Analysis
+### 3️. Data Analysis
 
 Explored customer churn across multiple dimensions:
 
