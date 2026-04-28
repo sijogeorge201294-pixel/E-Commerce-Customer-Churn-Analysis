@@ -185,6 +185,10 @@ where ChurnStatus = 'Churned') *100 as Percentage;
 
 -- 4. Identify the city tier with the highest number of churned customers whose preferred order category is Laptop & Accessory.
 select CityTier, count(*) as Churn_Count from customer_churn
+where ChurnStatus = 'Churned'
+group by CityTier order by Churn_Count desc;
+
+select CityTier, count(*) as Churn_Count from customer_churn
 where ChurnStatus = 'Churned' and PreferredOrderCat = 'Laptop & Accessory'
 group by CityTier order by Churn_Count desc limit 1;
 
@@ -264,6 +268,10 @@ select ChurnStatus, distance_category, count(CustomerID) as Customers
 from customer_churn
 group by ChurnStatus, distance_category order by ChurnStatus, Customers desc;
 
+select ChurnStatus, distance_category, count(CustomerID) as Customers
+from customer_churn where ChurnStatus = 'Churned'
+group by ChurnStatus, distance_category order by ChurnStatus, Customers desc;
+
 -- 17. List the customer’s order details who are married, live in City Tier-1, and their order counts are more than the average number of orders placed by all customers.
 select avg(OrderCount) from customer_churn;
 select * from customer_churn
@@ -293,8 +301,29 @@ values
 
 select * from customer_returns;
 
+-- 17. Display the return details along with the customer details of those who have churned and have made complaints.
 select * from customer_returns as cr
 left join customer_churn as cc
 on cr.CustomerID = cc.CustomerID
 where cc.ChurnStatus = 'Churned' and cc.ComplaintReceived = 'Yes';
 
+-- 18. Identify if the customers making returns are your most expensive customers in terms of the cashback they receive.
+select 
+    cc.CustomerID, 
+    cc.ChurnStatus, 
+    cr.RefundAmount,
+    cc.CashbackAmount as Recovered_Cashback,
+    (cr.RefundAmount - cc.CashbackAmount) as Net_Company_Outflow
+from customer_churn cc
+inner join customer_returns cr on cc.CustomerID = cr.CustomerID;
+
+-- 19. Identify which product categories are the most "unstable" by calculating the return rate per category.
+select 
+    cc.PreferredOrderCat,
+    count(cc.CustomerID) as Total_Customers,
+    count(cr.ReturnID) as Total_Returns,
+    round(count(cr.ReturnID) / count(cc.CustomerID) * 100, 2) as Return_Rate_Percentage
+from customer_churn cc
+left join customer_returns cr on cc.CustomerID = cr.CustomerID
+group by cc.PreferredOrderCat
+order by Return_Rate_Percentage desc;
